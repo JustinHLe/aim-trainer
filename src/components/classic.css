@@ -1,0 +1,15 @@
+.game-section{
+    width: 100vw;
+    height: calc(75vh + 40px);
+    display: flex;
+    justify-content: center;
+    align-items:flex-start;
+}
+.game-container{
+    display: flex;
+    top: 40px;
+    position: relative;
+    width: 95vw;
+    height: 75vh;
+    background-color: #787878;
+}
