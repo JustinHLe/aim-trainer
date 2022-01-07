@@ -22,6 +22,112 @@
 
 .counter{
     display: block;
-    margin-top: 10px;
+    margin-top: 20px;
     font-size: 50px;
+    font-family: 'Press Start 2P', cursive;
+}
+.hidden{
+    display: none;
+}
+.modal-overlay{
+    position: fixed;
+    display: flex;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4)
+}
+
+.modal-container{
+    background-color: rgba(255, 253, 253, 0);
+    display: flex;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 450px;
+    height: 450px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.modal-container-header{
+    font-size: 48px;
+    color: #CC0000;
+    font-weight: 600;
+    font-family: 'Press Start 2P', cursive;
+}
+
+.modal-container-span{
+    font-size: 24px;
+    font-weight: 400;
+    font-family: 'Press Start 2P', cursive;
+    cursor: pointer;
+}
+.modal-container-score{
+    font-weight: 400;
+    font-size: 16px;
+    font-family: 'Press Start 2P', cursive;
+}
+.modal-container-span:hover{
+    color:#202020;
+    animation: popup 1.5s infinite normal ease;
+}
+@keyframes popup {
+    0%{
+        transform: scale(1);
+    }
+    50%{
+        transform: scale(1.2);
+    }
+    100%{
+        transform: scale(1);
+    }
+}
+
+.input-field{
+    border: none;
+    outline: none;
+    background-color: transparent;
+    padding-left: 2px;
+    line-height: 24px;
+    color: rgba(0, 0, 0);
+    font-family: 'Press Start 2P', cursive;
+    font-size: 24px;
+    font-weight: 400;
+    border-bottom: 2px solid rgb(0, 0, 0);
+    width: 400px;
+    height: 32px;
+}
+
+.submit-btn{
+    width: 200px;
+    height: 40px;
+    border: 1px solid rgb(192, 192, 192);
+    border-radius: 4px;
+    outline: none;
+    color: rgb(231, 225, 225);
+    font-family: 'Press Start 2P', cursive;
+    letter-spacing: 1px;
+    font-size: 12px;
+    background-color: rgb(233, 122, 18);
+    cursor: pointer;
+}
+.submit-btn:hover{
+    animation: popup 1.5s infinite normal ease;
+}
+
+.back-btn{
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 16px;
+    font-weight: 400;
+    font-family: 'Press Start 2P', cursive;
+    cursor: pointer;
+}
+.back-btn::before{
+    content: '< ';
 }
