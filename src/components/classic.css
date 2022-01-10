@@ -131,3 +131,9 @@
 .back-btn::before{
     content: '< ';
 }
+
+.scorers{
+    font-weight: 700;
+    font-size: 16px;
+    font-family: 'Press Start 2P', cursive;
+}

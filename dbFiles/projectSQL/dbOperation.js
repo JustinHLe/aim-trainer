@@ -4,7 +4,12 @@ const sql = require('mssql')
 const getTop5Users = async() => {
     try{
         let pool = await sql.connect(config)
-        console.log(pool)
+        let topUsers = await pool.request()
+        .query(`SELECT username, score FROM USERS 
+                ORDER BY score DESC
+                OFFSET 0 ROWS 
+                FETCH NEXT 5 ROWS ONLY `)
+        return topUsers.recordset
     } 
     catch(err){
         console.log(err)
@@ -28,5 +33,6 @@ const createUser = async(User) => {
     }
 }
 module.exports = {
-    createUser
+    createUser,
+    getTop5Users
 }

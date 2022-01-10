@@ -6,16 +6,25 @@ function Classic (){
     const [count, setCount] = useState(0)
     const [timer, setTimer] = useState()
     const [end, setEnd] = useState(false)
+    const [start, setStart] = useState(false)
     const [form, setForm] = useState(false)
     const [restart, setRestart] = useState()
     const [viewList, setViewList] = useState(false)
     const [user, setUser] = useState({username: '', game_type: 'Classic', score: 0, submitted: ''})
+    const [topUsers, setTopUsers] = useState([])
     const backButton = useRef(null)
+    const square = useRef(null)
     const hitSound = new Audio("/hit.wav")
     useEffect(()=>{
-        console.log("run")
+        const gameContainer = document.getElementById("game-container")
+        const height = gameContainer.offsetHeight
+        const width = gameContainer.offsetWidth
+        square.current.style.top = (Math.random() * (height - 100)) + "px";
+        square.current.style.left = (Math.random() * (width - 100)) + "px";
+    },[])
+    useEffect(()=>{
         if (restart === undefined || restart === true){
-            var t = setInterval(moveSquare, 1000)
+            var t = setInterval(moveSquare, 750)
             setTimer(t)
             setRestart(false)
         }
@@ -25,7 +34,7 @@ function Classic (){
         }
     },[restart])
     useEffect(()=>{
-        if (count === 5){
+        if (count === 100){
             setEnd(true)
             clearInterval(timer)
         }
@@ -35,9 +44,8 @@ function Classic (){
         setHit(hit+1)
         moveSquare()
         clearInterval(timer)
-        var t = setInterval(moveSquare, 1000)
+        var t = setInterval(moveSquare, 750)
         setTimer(t)
-        //no need to declare another interval, the timer will always be called in the useEffect
     }
     function moveSquare(){
         //everytime state is updated the component is rerendered so count will always be 0
@@ -46,9 +54,8 @@ function Classic (){
         const gameContainer = document.getElementById("game-container")
         const height = gameContainer.offsetHeight
         const width = gameContainer.offsetWidth
-        const square = document.getElementById("square")
-        square.style.top = (Math.random() * (height - 100)) + "px";
-        square.style.left = (Math.random() * (width - 100)) + "px";
+        square.current.style.top = (Math.random() * (height - 100)) + "px";
+        square.current.style.left = (Math.random() * (width - 100)) + "px";
     }
     function resetGame(){
         setEnd(false)
@@ -61,9 +68,14 @@ function Classic (){
         setForm(true)
         setViewList(false)
     }
-    function viewScores(){
+    async function viewScores(){
         setForm(true)
         setViewList(true)
+        const topScorers = await fetch('http://localhost:8081/getTopUsers', {
+            method: 'GET'
+        }).then(res => {
+            return res.json()
+        }).then(data => setTopUsers(data))
     }
     async function resetForm(){
         console.log(user)
@@ -76,6 +88,7 @@ function Classic (){
                 //specifies what content the client is able to understand
                 'Accept': 'application/json'
             },
+            //converts javascript object to JSON string { x: 5, y: 6 } -> "{"x":5,"y":6}"
             body: JSON.stringify(user)
         })
         .then(res => res.json())
@@ -94,11 +107,10 @@ function Classic (){
         <>
         <section className='game-section'>
             <div className='counter'>
-                {count}
                 {hit}
             </div>
             <div className='game-container' id = "game-container">
-                <div className={count === 5 ? null : "square"} id = "square" onClick={handleHit}></div>
+                <div className={count === 100 ? null : "square"} id = "square"  ref = {square} onClick={handleHit}></div>
             </div>
         </section>
         <div className={end ? 'modal-overlay' : 'hidden'} >
@@ -110,7 +122,7 @@ function Classic (){
                     <span className='modal-container-span' onClick={viewScores}>View High Scores</span>
                     <span className='modal-container-span' onClick={submitData}>Submit Score</span>
                     <span className='modal-container-span' onClick={resetGame}>Play Again</span>
-                    <span className='modal-container-span'>Choose a Mode</span>
+                    {/* <span className='modal-container-span'>Choose a Mode</span> */}
                 </>
                 :
                 <>
@@ -123,7 +135,13 @@ function Classic (){
                     :
                         <>
                             <span className='back-btn' onClick={()=>setForm(false)}>Back</span>
-                            <div>top scores</div>
+                            {topUsers.map((item,i)=> {
+                                return (
+                                    <>
+                                        <div key={i} className='scorers'>{i+1}. {item.username} {item.score}</div>
+                                    </>
+                                )
+                            })}
                         </>
                 
                 }

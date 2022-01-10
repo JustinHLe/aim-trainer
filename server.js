@@ -23,7 +23,12 @@ app.post("/create", async (req,res) => {
     res.send(result)
 })
 
-
+app.get("/getTopUsers", async (req,res) => {
+    const result = await dbOperation.getTop5Users()
+    console.log(result)
+    res.send(result)
+    return result
+})
 
 app.get("/", function(req,res){
     res.send("You've reached the home page")
