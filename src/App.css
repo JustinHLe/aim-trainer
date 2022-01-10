@@ -1,7 +1,37 @@
 .square{
-    width: 35px;
-    height: 35px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
     background-color: red;
     position: absolute;
+}
+
+.modal-container-header{
+    font-size: 48px;
+    color: #CC0000;
+    font-weight: 600;
+    font-family: 'Press Start 2P', cursive;
+}
+
+.modal-container-span{
+    font-size: 24px;
+    font-weight: 400;
+    font-family: 'Press Start 2P', cursive;
+    cursor: pointer;
+}
+
+.modal-container-span:hover{
+    color:#202020;
+    animation: popup 1.5s infinite normal ease;
+}
+@keyframes popup {
+    0%{
+        transform: scale(1);
+    }
+    50%{
+        transform: scale(1.2);
+    }
+    100%{
+        transform: scale(1);
+    }
 }

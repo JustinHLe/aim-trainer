@@ -1,12 +1,11 @@
 import './classic.css'
 import { useState, useEffect, useRef } from 'react';
 
-function Classic (){
+function Classic ({start}){
     const [hit, setHit] = useState(0)
     const [count, setCount] = useState(0)
     const [timer, setTimer] = useState()
     const [end, setEnd] = useState(false)
-    const [start, setStart] = useState(false)
     const [form, setForm] = useState(false)
     const [restart, setRestart] = useState()
     const [viewList, setViewList] = useState(false)
@@ -16,15 +15,17 @@ function Classic (){
     const square = useRef(null)
     const hitSound = new Audio("/hit.wav")
     useEffect(()=>{
+        if(start === false){
+            square.current.style.visibility="hidden"
+            return
+        }
         const gameContainer = document.getElementById("game-container")
         const height = gameContainer.offsetHeight
         const width = gameContainer.offsetWidth
         square.current.style.top = (Math.random() * (height - 100)) + "px";
         square.current.style.left = (Math.random() * (width - 100)) + "px";
-    },[])
-    useEffect(()=>{
         if (restart === undefined || restart === true){
-            var t = setInterval(moveSquare, 750)
+            var t = setInterval(moveSquare, 1000)
             setTimer(t)
             setRestart(false)
         }
@@ -32,7 +33,7 @@ function Classic (){
             console.log("clean up")
             clearInterval(timer)
         }
-    },[restart])
+    },[restart, start])
     useEffect(()=>{
         if (count === 100){
             setEnd(true)
@@ -40,22 +41,28 @@ function Classic (){
         }
     },[count])
     function handleHit(){
+        moveSquare()
         hitSound.play()
         setHit(hit+1)
-        moveSquare()
         clearInterval(timer)
-        var t = setInterval(moveSquare, 750)
+        var t = setInterval(moveSquare, 1000)
         setTimer(t)
     }
+
     function moveSquare(){
         //everytime state is updated the component is rerendered so count will always be 0
         //in order to use the previousCount we need to pass a function that passes in the previousCount to increment
-        setCount(prevCount => prevCount + 1)
+        square.current.style.visibility = "hidden"
         const gameContainer = document.getElementById("game-container")
         const height = gameContainer.offsetHeight
         const width = gameContainer.offsetWidth
         square.current.style.top = (Math.random() * (height - 100)) + "px";
         square.current.style.left = (Math.random() * (width - 100)) + "px";
+        setTimeout(()=>{
+            square.current.style.visibility = "visible"
+
+        }, 300)
+        setCount(prevCount => prevCount + 1)
     }
     function resetGame(){
         setEnd(false)
