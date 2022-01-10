@@ -1,5 +1,5 @@
 import './classic.css'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 function Classic (){
     const [hit, setHit] = useState(0)
@@ -9,6 +9,8 @@ function Classic (){
     const [form, setForm] = useState(false)
     const [restart, setRestart] = useState()
     const [viewList, setViewList] = useState(false)
+    const [user, setUser] = useState({username: '', game_type: 'Classic', score: 0, submitted: ''})
+    const backButton = useRef(null)
     const hitSound = new Audio("/hit.wav")
     useEffect(()=>{
         console.log("run")
@@ -63,6 +65,31 @@ function Classic (){
         setForm(true)
         setViewList(true)
     }
+    async function resetForm(){
+        console.log(user)
+        const newUser = await fetch('http://localhost:8081/create', {
+            method: 'POST',
+            //pass additional content to server with the HTTP request to clarify communication between client and server
+            headers: {
+                //content type tells it what type of resource
+                'Content-Type': 'application/json',
+                //specifies what content the client is able to understand
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(user)
+        })
+        .then(res => res.json())
+        setUser({username: '', game_type: 'Classic', score: 0, submitted: ''})
+        backButton.current.click()
+        console.log(newUser)
+    }
+    function handleChange(e){
+        setUser({
+            username: e.target.value,
+            game_type: 'Classic',
+            score: hit,
+        })
+    }
     return (
         <>
         <section className='game-section'>
@@ -89,9 +116,9 @@ function Classic (){
                 <>
                     {!viewList ? 
                         <>
-                            <span className='back-btn' onClick={()=>setForm(false)}>Back</span>
-                            <input className='input-field' placeholder='Enter your name'></input>
-                            <input className='submit-btn' type="submit"></input>
+                            <span className='back-btn' onClick={()=>setForm(false)} ref={backButton}>Back</span>
+                            <input className='input-field' placeholder='Enter your name' onChange={handleChange}></input>
+                            <input className='submit-btn' type="submit" onClick={()=>resetForm()}></input>
                         </>
                     :
                         <>
